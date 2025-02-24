@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
+ * <p>Classe de entrada para realizar o cadastro de um Autor. </p>
  * <p>Todo autor tem um nome,
  * email e uma descrição. Também queremos saber o instante exato que ele foi
  * registrado.
@@ -22,7 +23,7 @@ import jakarta.validation.constraints.Size;
  * @author rafael.altagnam
  * @desafio 1
  */
-public class Autor {
+public class AutorCadastro {
 
 	@NotNull(message = "Nome é obrigatório")
 	private String nome;
@@ -32,14 +33,17 @@ public class Autor {
 	private String email;
 
 	@NotNull(message = "Descrição é obrigatório")
-	@Size(min = 1, max = 400, message = "Tamanho permitido: 1 a 400 caracteres")
+	@Size(max = 400, message = "A descrição deve possuir no máximo 400 caracteres")
 	private String descricao;
 
 	private LocalDateTime instante;
 
 
-	public Autor(String nome, String descricao, String email) {
-		super();
+	public AutorCadastro(String nome, String descricao, String email) {
+		Assert.hasText(nome, "Nome é obrigatório");
+		Assert.hasText(email, "E-mail é obrigatório");
+		Assert.isTrue(EmailValidator.validar(email), "E-mail inválido");
+		Assert.hasText(descricao, "Descrição é obrigatório");
 		this.nome = nome;
 		this.descricao = descricao;
 		this.email = email;
@@ -76,11 +80,6 @@ public class Autor {
 	
 	
 	public AutorEntidade toEntidade() {
-		Assert.hasText(this.nome, "Nome é obrigatório");
-		Assert.hasText(this.email, "E-mail é obrigatório");
-		Assert.isTrue(EmailValidator.validar(this.email), "E-mail inválido");
-		Assert.hasText(this.descricao, "Descrição é obrigatório");
-		Assert.notNull(this.instante, "A data de crição é obrigatória");
 		return new AutorEntidade(
 				this.nome, 
 				this.email, 

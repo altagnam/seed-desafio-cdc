@@ -24,6 +24,11 @@ public class MessageHandle {
 				.collect(Collectors.toList());
 		return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<Map<String, List<String>>> handleIllegalArgumentException(IllegalArgumentException ex) {
+		return new ResponseEntity<>(getErrorsMap(Arrays.asList(ex.getLocalizedMessage())), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+	}
 
 	@ExceptionHandler(org.hibernate.exception.ConstraintViolationException.class)
 	public ResponseEntity<Map<String, List<String>>> handlePersistenceErrors(ConstraintViolationException ex) {
