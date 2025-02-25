@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import br.com.jornada.dev.primeiro.desafio.model.AutorCadastro;
+import br.com.jornada.dev.primeiro.desafio.model.AutorRequest;
 import br.com.jornada.dev.primeiro.desafio.repository.AutorRepositorio;
 
 @Component
@@ -17,7 +17,7 @@ public class AutorValidator implements Validator {
 
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return clazz.isAssignableFrom(AutorCadastro.class);
+		return clazz.isAssignableFrom(AutorRequest.class);
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class AutorValidator implements Validator {
 			return;
 		}
 		
-		var autor = (AutorCadastro) target;
+		var autor = (AutorRequest) target;
 		if (this.autorRepositorio.findByEmail(autor.getEmail()).isPresent()) {
 			errors.rejectValue("email", null, "Já existe um usuário cadastrado com este email");
 		}

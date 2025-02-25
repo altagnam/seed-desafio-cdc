@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import br.com.jornada.dev.primeiro.desafio.model.AutorCadastro;
+import br.com.jornada.dev.primeiro.desafio.model.AutorRequest;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -19,14 +19,14 @@ public class AutorTest {
 	
 	@Test
 	void validarInstanciaAutorEntidadeSucesso() {		
-		var autor = new AutorCadastro("João", "Teste do João", "joao@teste.com.br");	    
+		var autor = new AutorRequest("João", "Teste do João", "joao@teste.com.br");	    
 		assertNotNull(autor.toEntidade());		
 	}
 	
 	@Test
 	void validarNomePreenchido() {		
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			new AutorCadastro(null, "Teste de João", "joao@teste.com.br");
+			new AutorRequest(null, "Teste de João", "joao@teste.com.br");
 	    });		
 		assertTrue("Nome é obrigatório".contains(exception.getMessage()));		
 	}
@@ -34,7 +34,7 @@ public class AutorTest {
 	@Test
 	void validarDescricaoPreenchido() {		
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			new AutorCadastro("João", "", "joao@teste.com.br");
+			new AutorRequest("João", "", "joao@teste.com.br");
 	    });		
 		assertTrue("Descrição é obrigatório".contains(exception.getMessage()));		
 	}
@@ -43,7 +43,7 @@ public class AutorTest {
 	@DisplayName("verificar se email foi preenchido")
 	void validarEmailPreenchido() {		
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			new AutorCadastro("João", "Teste de João", "");
+			new AutorRequest("João", "Teste de João", "");
 	    });		
 		assertTrue("E-mail é obrigatório".contains(exception.getMessage()));		
 	}
@@ -52,7 +52,7 @@ public class AutorTest {
 	@DisplayName("verificar se email é valido")
 	void validarEmailInvalido() {		
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			new AutorCadastro("João", "Teste de João", "teste.com.br");
+			new AutorRequest("João", "Teste de João", "teste.com.br");
 	    });		
 		assertTrue("E-mail inválido".contains(exception.getMessage()));		
 	}

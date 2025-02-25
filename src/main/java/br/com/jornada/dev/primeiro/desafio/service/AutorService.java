@@ -2,8 +2,8 @@ package br.com.jornada.dev.primeiro.desafio.service;
 
 import org.springframework.stereotype.Service;
 
-import br.com.jornada.dev.primeiro.desafio.model.AutorCadastrado;
-import br.com.jornada.dev.primeiro.desafio.model.AutorCadastro;
+import br.com.jornada.dev.primeiro.desafio.model.AutorResponse;
+import br.com.jornada.dev.primeiro.desafio.model.AutorRequest;
 import br.com.jornada.dev.primeiro.desafio.repository.AutorRepositorio;
 import jakarta.validation.Valid;
 
@@ -22,7 +22,7 @@ public class AutorService {
 	 * @param novoAutor
 	 * @return
 	 */
-	public AutorCadastrado cadastrar(final @Valid AutorCadastro novoAutor) {
+	public AutorResponse cadastrar(final @Valid AutorRequest novoAutor) {
 		return this.repositorio
 				.save(novoAutor.toEntidade())
 				.toAutorCadastrado();

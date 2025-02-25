@@ -3,7 +3,10 @@ package br.com.jornada.dev.primeiro.desafio.entidade;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import br.com.jornada.dev.primeiro.desafio.model.AutorCadastrado;
+import org.springframework.util.Assert;
+
+import br.com.jornada.dev.primeiro.desafio.model.AutorResponse;
+import br.com.jornada.dev.primeiro.desafio.validador.EmailValidator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -44,25 +47,8 @@ public class AutorEntidade {
 	 * Necessário para hibernate
 	 */
 	@Deprecated
-	public AutorEntidade() {
+	protected AutorEntidade() {
 		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param id
-	 * @param nome
-	 * @param email
-	 * @param descricao
-	 * @param instante
-	 */
-	public AutorEntidade(Long id, @NotNull String nome, @NotNull String email, @NotNull String descricao,
-			@NotNull LocalDateTime instante) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.email = email;
-		this.descricao = descricao;
-		this.instante = instante;
 	}
 
 	/**
@@ -74,6 +60,10 @@ public class AutorEntidade {
 	public AutorEntidade(@NotNull String nome, @NotNull @Email String email,
 			@NotNull @Size(min = 1, max = 400) String descricao, LocalDateTime instante) {
 		super();
+		Assert.hasText(nome, "Nome é obrigatório");
+		Assert.hasText(email, "E-mail é obrigatório");
+		Assert.isTrue(EmailValidator.validar(email), "E-mail inválido");
+		Assert.hasText(descricao, "Descrição é obrigatório");
 		this.nome = nome;
 		this.email = email;
 		this.descricao = descricao;
@@ -150,8 +140,8 @@ public class AutorEntidade {
 		this.instante = instante;
 	}
 	
-	public AutorCadastrado toAutorCadastrado() {
-		return new AutorCadastrado(this.id, this.nome);
+	public AutorResponse toAutorCadastrado() {
+		return new AutorResponse(this.id, this.nome);
 	}
 
 	@Override

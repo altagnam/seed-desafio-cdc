@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.jornada.dev.primeiro.desafio.model.AutorCadastrado;
-import br.com.jornada.dev.primeiro.desafio.model.AutorCadastro;
+import br.com.jornada.dev.primeiro.desafio.model.AutorResponse;
+import br.com.jornada.dev.primeiro.desafio.model.AutorRequest;
 import br.com.jornada.dev.primeiro.desafio.service.AutorService;
 import br.com.jornada.dev.primeiro.desafio.validador.AutorValidator;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/autor")
+@RequestMapping("/autores")
 public class AutorController {
 	
 	private final AutorService service;
@@ -35,7 +35,7 @@ public class AutorController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.OK)
-	public AutorCadastrado cadastrar(@RequestBody @Valid final AutorCadastro autor) {
+	public AutorResponse cadastrar(@Valid @RequestBody final AutorRequest autor) {
 		return this.service.cadastrar(autor);
 	}
 

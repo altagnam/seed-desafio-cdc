@@ -23,7 +23,7 @@ import jakarta.validation.constraints.Size;
  * @author rafael.altagnam
  * @desafio 1
  */
-public class AutorCadastro {
+public class AutorRequest {
 
 	@NotNull(message = "Nome é obrigatório")
 	private String nome;
@@ -39,11 +39,7 @@ public class AutorCadastro {
 	private LocalDateTime instante;
 
 
-	public AutorCadastro(String nome, String descricao, String email) {
-		Assert.hasText(nome, "Nome é obrigatório");
-		Assert.hasText(email, "E-mail é obrigatório");
-		Assert.isTrue(EmailValidator.validar(email), "E-mail inválido");
-		Assert.hasText(descricao, "Descrição é obrigatório");
+	public AutorRequest(String nome, String descricao, String email) {
 		this.nome = nome;
 		this.descricao = descricao;
 		this.email = email;

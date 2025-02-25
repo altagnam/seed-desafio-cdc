@@ -4,7 +4,7 @@ package br.com.jornada.dev.primeiro.desafio.model;
  * @author rafael.altagnam
  *
  */
-public class AutorCadastrado {
+public class AutorResponse {
 
 	private final Long id;
 	private final String nome;
@@ -14,7 +14,7 @@ public class AutorCadastrado {
 	 * @param id
 	 * @param nome
 	 */
-	public AutorCadastrado(Long id, String nome) {
+	public AutorResponse(Long id, String nome) {
 		super();
 		this.id = id;
 		this.nome = nome;
