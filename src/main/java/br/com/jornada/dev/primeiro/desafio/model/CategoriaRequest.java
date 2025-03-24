@@ -3,6 +3,7 @@ package br.com.jornada.dev.primeiro.desafio.model;
 import org.springframework.util.Assert;
 
 import br.com.jornada.dev.primeiro.desafio.entidade.CategoriaEntidade;
+import br.com.jornada.dev.primeiro.desafio.validador.UniqueValue;
 import jakarta.validation.constraints.NotBlank;
 
 /**
@@ -14,6 +15,7 @@ import jakarta.validation.constraints.NotBlank;
 public class CategoriaRequest {
 
 	@NotBlank(message = "Nome é obrigatório")
+	@UniqueValue(domainClass = CategoriaEntidade.class, fieldName = "nome")
 	private final String nome;
 	
 

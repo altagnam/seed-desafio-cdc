@@ -6,6 +6,9 @@ server:
       force-response: true
 
 spring:
+  messages:
+    basename:
+    - messages
   application:
     name: 'primeiro-desafio'
   datasource:
