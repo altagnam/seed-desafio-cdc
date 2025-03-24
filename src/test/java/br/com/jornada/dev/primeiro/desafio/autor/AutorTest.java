@@ -26,7 +26,8 @@ public class AutorTest {
 	@Test
 	void validarNomePreenchido() {		
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			new AutorRequest(null, "Teste de João", "joao@teste.com.br");
+			var request = new AutorRequest(null, "Teste de João", "joao@teste.com.br");
+			request.toEntidade();
 	    });		
 		assertTrue("Nome é obrigatório".contains(exception.getMessage()));		
 	}
@@ -34,7 +35,8 @@ public class AutorTest {
 	@Test
 	void validarDescricaoPreenchido() {		
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			new AutorRequest("João", "", "joao@teste.com.br");
+			var request = new AutorRequest("João", "", "joao@teste.com.br");
+			request.toEntidade();
 	    });		
 		assertTrue("Descrição é obrigatório".contains(exception.getMessage()));		
 	}
@@ -43,7 +45,8 @@ public class AutorTest {
 	@DisplayName("verificar se email foi preenchido")
 	void validarEmailPreenchido() {		
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			new AutorRequest("João", "Teste de João", "");
+			var request = new AutorRequest("João", "Teste de João", "");
+			request.toEntidade();
 	    });		
 		assertTrue("E-mail é obrigatório".contains(exception.getMessage()));		
 	}
@@ -52,7 +55,8 @@ public class AutorTest {
 	@DisplayName("verificar se email é valido")
 	void validarEmailInvalido() {		
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			new AutorRequest("João", "Teste de João", "teste.com.br");
+			var request = new AutorRequest("João", "Teste de João", "teste.com.br");
+			request.toEntidade();
 	    });		
 		assertTrue("E-mail inválido".contains(exception.getMessage()));		
 	}

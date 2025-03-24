@@ -1,7 +1,5 @@
 package br.com.jornada.dev.primeiro.desafio.model;
 
-import org.springframework.util.Assert;
-
 import br.com.jornada.dev.primeiro.desafio.entidade.CategoriaEntidade;
 import br.com.jornada.dev.primeiro.desafio.validador.UniqueValue;
 import jakarta.validation.constraints.NotBlank;
@@ -22,7 +20,7 @@ public class CategoriaRequest {
 	/**
 	 * @param nome
 	 */
-	public CategoriaRequest(final String nome) {
+	public CategoriaRequest(@NotBlank final String nome) {
 		this.nome = nome;
 	}
 
@@ -40,7 +38,6 @@ public class CategoriaRequest {
 	 * @return
 	 */
 	public CategoriaEntidade toEntidade() {
-		Assert.hasText(nome, "Nome é obrigatório");
 		return new CategoriaEntidade(getNome()); 
 	}
 

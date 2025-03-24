@@ -1,5 +1,7 @@
 package br.com.jornada.dev.primeiro.desafio.entidade;
 
+import org.springframework.util.Assert;
+
 import br.com.jornada.dev.primeiro.desafio.model.CategoriaResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,6 +36,7 @@ public class CategoriaEntidade {
 	 */
 	public CategoriaEntidade(@NotNull String nome) {
 		super();
+		Assert.hasText(nome, "Nome é obrigatório");
 		this.nome = nome;
 	}
 

@@ -5,10 +5,7 @@ package br.com.jornada.dev.primeiro.desafio.model;
 
 import java.time.LocalDateTime;
 
-import org.springframework.util.Assert;
-
 import br.com.jornada.dev.primeiro.desafio.entidade.AutorEntidade;
-import br.com.jornada.dev.primeiro.desafio.validador.EmailValidator;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import br.com.jornada.dev.primeiro.desafio.model.AutorRequest;
 import br.com.jornada.dev.primeiro.desafio.model.CategoriaRequest;
 
 @SpringBootTest
@@ -29,7 +28,8 @@ public class CategoriaTest {
 	@DisplayName("verificar se o nome esta diferente de null")
 	void validarCriacaoInstanciaEntidadeComErroNomeNull() {		
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			new CategoriaRequest(null);
+			var request = new CategoriaRequest(null);
+			request.toEntidade();
 	    });		
 		assertTrue("Nome é obrigatório".contains(exception.getMessage()));		
 	}
@@ -38,19 +38,10 @@ public class CategoriaTest {
 	@DisplayName("verificar se o nome esta diferente de vazio")
 	void validarCriacaoInstanciaEntidadeComErroNomeEmpty() {		
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			new CategoriaRequest("");
+			var request = new CategoriaRequest("");
+			request.toEntidade();
 	    });		
 		assertTrue("Nome é obrigatório".contains(exception.getMessage()));		
 	}	
 	
-	
-	@Test
-	@DisplayName("verificar se email é valido")
-	void validarEmailInvalido() {		
-		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			new AutorRequest("João", "Teste de João", "teste.com.br");
-	    });		
-		assertTrue("E-mail inválido".contains(exception.getMessage()));		
-	}
-
 }
