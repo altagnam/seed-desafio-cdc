@@ -1,10 +1,12 @@
 package br.com.jornada.dev.primeiro.desafio.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -24,9 +26,19 @@ public class MessageErroHandle {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	public ErrosReponse handleValidationErrors(MethodArgumentNotValidException ex) {
-		List<FieldError> errors = ex.getBindingResult().getFieldErrors().stream().collect(Collectors.toList());
-		
+		List<FieldError> errors = ex.getBindingResult().getFieldErrors().stream().collect(Collectors.toList());		
 		return new ErrosReponse(getErrors(errors));
+	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	public ErrosReponse handleIllegalArgumentException(IllegalArgumentException ex) {
+		try {
+			var message = this.messageSource.getMessage(ex.getLocalizedMessage(), null, LocaleContextHolder.getLocale());
+			return new ErrosReponse(Arrays.asList(message));
+		}catch (NoSuchMessageException e) {
+			return new ErrosReponse(Arrays.asList(ex.getLocalizedMessage()));
+		}
 	}
 	
 	
