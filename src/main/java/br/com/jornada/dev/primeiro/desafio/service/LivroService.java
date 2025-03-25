@@ -3,7 +3,7 @@ package br.com.jornada.dev.primeiro.desafio.service;
 import org.springframework.stereotype.Service;
 
 import br.com.jornada.dev.primeiro.desafio.model.LivroRequest;
-import br.com.jornada.dev.primeiro.desafio.model.LivroResponse;
+import br.com.jornada.dev.primeiro.desafio.model.LivroDadosSimplesResponse;
 import br.com.jornada.dev.primeiro.desafio.repository.AutorRepositorio;
 import br.com.jornada.dev.primeiro.desafio.repository.CategoriaRepositorio;
 import br.com.jornada.dev.primeiro.desafio.repository.LivroRepositorio;
@@ -39,7 +39,7 @@ public class LivroService {
 	 * @param novoLivro
 	 * @return
 	 */
-	public LivroResponse cadastrar(final @Valid @Null LivroRequest novoLivro) {
+	public LivroDadosSimplesResponse cadastrar(final @Valid @Null LivroRequest novoLivro) {
 		return this.repositorio
 				.save(novoLivro.toEntidade(categoriaRepositorio, autorRepositorio))
 				.toLivroResponse();

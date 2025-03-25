@@ -3,7 +3,7 @@ package br.com.jornada.dev.primeiro.desafio.entidade;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import br.com.jornada.dev.primeiro.desafio.model.LivroResponse;
+import br.com.jornada.dev.primeiro.desafio.model.LivroDadosSimplesResponse;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -147,7 +147,7 @@ public class LivroEntidade {
 	/**
 	 * @return the sumario
 	 */
-	public Object getSumario() {
+	public String getSumario() {
 		return sumario;
 	}
 
@@ -246,8 +246,8 @@ public class LivroEntidade {
 	 * 
 	 * @return
 	 */
-	public LivroResponse toLivroResponse() {
-		return new LivroResponse(id, titulo);
+	public LivroDadosSimplesResponse toLivroResponse() {
+		return new LivroDadosSimplesResponse(id, titulo);
 	}
 
 	@Override

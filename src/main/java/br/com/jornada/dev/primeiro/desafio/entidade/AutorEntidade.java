@@ -25,19 +25,19 @@ public class AutorEntidade {
 	private Long id;
 
 	@NotNull
-	@Column(name = "NOME", nullable = false)
+	@Column(name = "nome", nullable = false)
 	private String nome;
 
 	@NotNull
-	@Column(name = "EMAIL", nullable = false, unique = true)
+	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
 	@NotNull
-	@Column(name = "DESCRICAO", nullable = false, length = 400)
+	@Column(name = "descricao", nullable = false, length = 400)
 	private String descricao;
 
 	@NotNull
-	@Column(name = "INSTANTE", nullable = false)
+	@Column(name = "instante", nullable = false)
 	private LocalDateTime instante;
 
 	/**

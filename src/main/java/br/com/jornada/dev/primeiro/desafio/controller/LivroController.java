@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.jornada.dev.primeiro.desafio.model.LivroRequest;
-import br.com.jornada.dev.primeiro.desafio.model.LivroResponse;
+import br.com.jornada.dev.primeiro.desafio.model.LivroDadosSimplesResponse;
 import br.com.jornada.dev.primeiro.desafio.service.LivroService;
 import jakarta.validation.Valid;
 
@@ -33,7 +33,7 @@ public class LivroController {
 	 */
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.OK)
-	public LivroResponse cadastrar(@Valid @RequestBody final LivroRequest novoLivro) {
+	public LivroDadosSimplesResponse cadastrar(@Valid @RequestBody final LivroRequest novoLivro) {
 		return service.cadastrar(novoLivro);
 	}
 	

@@ -15,12 +15,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import jakarta.persistence.NoResultException;
+
 @RestControllerAdvice
 public class MessageErroHandle {
 	
 	private MessageSource messageSource;
 	public MessageErroHandle(final MessageSource messageSource) {
 		this.messageSource = messageSource;
+	}
+	
+	@ExceptionHandler(NoResultException.class)
+	@ResponseStatus(code = HttpStatus.NOT_FOUND)
+	public ErrosReponse handleNoResultException(NoResultException ex) {
+		return new ErrosReponse(Arrays.asList("Nenhum registro encontrado."));
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

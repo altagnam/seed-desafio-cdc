@@ -23,7 +23,7 @@ package br.com.jornada.dev.primeiro.desafio.model;
  * @author rafael.altagnam
  * @desafio 1
  */
-public class LivroResponse {
+public class LivroDadosSimplesResponse {
 	
 	private Long id;
 
@@ -31,14 +31,11 @@ public class LivroResponse {
 	
 
 	/**
+	 * 
 	 * @param id
 	 * @param titulo
-	 * @param preco
-	 * @param numeroPaginas
-	 * @param isbn
-	 * @param dataPublicacao
 	 */
-	public LivroResponse(Long id, String titulo) {
+	public LivroDadosSimplesResponse(Long id, String titulo) {
 		super();
 		this.id = id;
 		this.titulo = titulo;

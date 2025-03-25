@@ -19,7 +19,7 @@ public class CategoriaEntidade {
 	private Long id;
 
 	@NotNull
-	@Column(name = "NOME", nullable = false)
+	@Column(name = "nome", nullable = false)
 	private String nome;
 	
 	/**
