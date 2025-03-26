@@ -40,6 +40,19 @@ public class EstadoEntidade {
 	@ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_pais")
 	private PaisEntidade pais;
+	
+	
+
+	/**
+	 * <p>Utilizado pelo JPA</p>
+	 * Evita o erro <br/>
+	 * <code>org.hibernate.InstantiationException: No default constructor for entity 'br.com.jornada.dev.primeiro.desafio.entidade.EstadoEntidade'</code><br/>
+	 * ao tentar instanciar esta entidade via jpa
+	 */
+	@Deprecated
+	public EstadoEntidade() {
+		super();
+	}
 
 	/**
 	 * @param nome
@@ -72,6 +85,14 @@ public class EstadoEntidade {
 		return pais;
 	}
 
+	/**
+	 * 
+	 * @param pais
+	 * @return
+	 */
+	public boolean isPertencePais(final PaisEntidade pais) {
+		return this.pais.equals(pais);
+	}
 	
 	
 	@Override

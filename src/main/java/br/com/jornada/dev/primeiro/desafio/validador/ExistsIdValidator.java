@@ -1,5 +1,7 @@
 package br.com.jornada.dev.primeiro.desafio.validador;
 
+import java.util.Objects;
+
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.EntityManager;
@@ -9,7 +11,6 @@ import jakarta.validation.ConstraintValidatorContext;
 
 @Component
 public class ExistsIdValidator implements ConstraintValidator<ExistisId, Long> {
-
 
 	private String domainField;
 	private Class<?> domaninClass;
@@ -33,6 +34,10 @@ public class ExistsIdValidator implements ConstraintValidator<ExistisId, Long> {
 	@Override
 	public boolean isValid(Long value, ConstraintValidatorContext context) {
 		boolean valid = true;
+		if (Objects.isNull(value)) {
+			return valid;			
+		}
+		
 		try {
 			StringBuilder query = new StringBuilder("SELECT 1 FROM ")
 					.append(domaninClass.getSimpleName())
