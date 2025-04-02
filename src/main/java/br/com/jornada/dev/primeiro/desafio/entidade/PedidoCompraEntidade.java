@@ -1,18 +1,24 @@
 package br.com.jornada.dev.primeiro.desafio.entidade;
 
+import java.util.Optional;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class SolicitacaoCompraEntidade {
+@Entity
+@jakarta.persistence.Table(name = "PEDIDO")
+public class PedidoCompraEntidade {
 	
 	
 	@Id
@@ -65,6 +71,10 @@ public class SolicitacaoCompraEntidade {
 	@ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 	private PaisEntidade pais;
 
+	@OneToOne(cascade = CascadeType.PERSIST, mappedBy = "pedido", targetEntity = CompraEntidade.class)
+	private CompraEntidade compra;
+	
+
 	/**
 	 * @param email
 	 * @param nome
@@ -78,9 +88,9 @@ public class SolicitacaoCompraEntidade {
 	 * @param estado
 	 * @param pais
 	 */
-	public SolicitacaoCompraEntidade(@Email @NotBlank String email, @NotBlank String nome, @NotBlank String sobreNome,
+	public PedidoCompraEntidade(@Email @NotBlank String email, @NotBlank String nome, @NotBlank String sobreNome,
 			@NotBlank String documento, @NotBlank String endereco, @NotBlank String complemento,
-			@NotBlank String cidade, @NotBlank String telefone, @NotBlank String cep, EstadoEntidade estado,
+			@NotBlank String cidade, @NotBlank String telefone, @NotBlank String cep, Optional<EstadoEntidade> opcaoEstado,
 			@NotNull PaisEntidade pais) {
 		super();
 		this.email = email;
@@ -92,7 +102,7 @@ public class SolicitacaoCompraEntidade {
 		this.cidade = cidade;
 		this.telefone = telefone;
 		this.cep = cep;
-		this.estado = estado;
+		this.estado =  opcaoEstado.orElse(null);
 		this.pais = pais;
 	}
 
@@ -165,6 +175,14 @@ public class SolicitacaoCompraEntidade {
 	public String getCep() {
 		return cep;
 	}
+	
+	/**
+	 * 
+	 * @param estado
+	 */
+	public void setEstado(EstadoEntidade estado) {
+		this.estado = estado;
+	}
 
 	/**
 	 * @return the estado
@@ -178,6 +196,21 @@ public class SolicitacaoCompraEntidade {
 	 */
 	public PaisEntidade getPais() {
 		return pais;
+	}
+	
+	/**
+	 * 
+	 * @param compra
+	 */
+	public void setCompra(CompraEntidade compra) {
+		this.compra = compra;
+	}
+
+	/**
+	 * @return the compra
+	 */
+	public CompraEntidade getCompra() {
+		return compra;
 	}
 
 	@Override

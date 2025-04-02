@@ -1,22 +1,26 @@
 package br.com.jornada.dev.primeiro.desafio.model;
 
+import java.util.Optional;
+
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.util.Assert;
 
 import br.com.jornada.dev.primeiro.desafio.entidade.EstadoEntidade;
 import br.com.jornada.dev.primeiro.desafio.entidade.PaisEntidade;
-import br.com.jornada.dev.primeiro.desafio.entidade.SolicitacaoCompraEntidade;
+import br.com.jornada.dev.primeiro.desafio.entidade.PedidoCompraEntidade;
 import br.com.jornada.dev.primeiro.desafio.repository.EstadoRepositorio;
+import br.com.jornada.dev.primeiro.desafio.repository.LivroRepositorio;
 import br.com.jornada.dev.primeiro.desafio.repository.PaisRepositorio;
 import br.com.jornada.dev.primeiro.desafio.validador.CpfCnpj;
 import br.com.jornada.dev.primeiro.desafio.validador.ExistisId;
 import jakarta.persistence.NoResultException;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class SolicitacaoCompraRequest {
+public class PedidoCompraRequest {
 	
 	@Email
 	@NotBlank
@@ -53,6 +57,10 @@ public class SolicitacaoCompraRequest {
 	
 	@NotBlank
 	private String cep;
+	
+	@Valid
+	@NotNull
+	private CompraRequest compra;
 
 	/**
 	 * @param email
@@ -67,9 +75,9 @@ public class SolicitacaoCompraRequest {
 	 * @param telefone
 	 * @param cep
 	 */
-	public SolicitacaoCompraRequest(@Email @NotBlank String email, @NotBlank String nome, @NotBlank String sobreNome,
+	public PedidoCompraRequest(@Email @NotBlank String email, @NotBlank String nome, @NotBlank String sobreNome,
 			@NotBlank @CPF @CNPJ String documento, @NotBlank String endereco, @NotBlank String complemento,
-			@NotBlank String cidade, Long estado, @NotNull Long pais, @NotBlank String telefone, @NotBlank String cep) {
+			@NotBlank String cidade, Long estado, @NotNull Long pais, @NotBlank String telefone, @NotBlank String cep, @NotNull CompraRequest compra) {
 		super();
 		this.email = email;
 		this.nome = nome;
@@ -82,6 +90,7 @@ public class SolicitacaoCompraRequest {
 		this.pais = pais;
 		this.telefone = telefone;
 		this.cep = cep;
+		this.compra = compra;
 	}
 
 	/**
@@ -161,32 +170,40 @@ public class SolicitacaoCompraRequest {
 		return cep;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public CompraRequest getCompra() {
+		return compra;
+	}
 	
 	/**
-	 * Retorna uma instancia valida de {@link SolicitacaoCompraEntidade}
+	 * Retorna uma instancia valida de {@link PedidoCompraEntidade}
 	 * @param paisRepositorio
 	 * @param estadoRepositorio
 	 * @return
 	 */
-	public SolicitacaoCompraEntidade toEntidade(final PaisRepositorio paisRepositorio, final EstadoRepositorio estadoRepositorio) {
-		EstadoEntidade estadoEncontrado = null;
+	public PedidoCompraEntidade toEntidade(final PaisRepositorio paisRepositorio, final EstadoRepositorio estadoRepositorio, final LivroRepositorio livroRepositorio) {
+		Optional<EstadoEntidade> estadoEncontrado = Optional.empty();
 		PaisEntidade paisEncontrado = paisRepositorio.findById(pais).orElseThrow(() -> new NoResultException("País não encontrado."));
 		
 		if (estadoRepositorio.countByPais(pais) > 0) {
-			Assert.notNull(estado, "Estado não informado.");
-			estadoEncontrado = estadoRepositorio.findById(estado).orElseThrow(() -> new NoResultException("Estado não encontrado."));
+			Assert.notNull(estado, "Estado precisa ser informado.");
+			estadoEncontrado = Optional.of(estadoRepositorio.findById(estado).orElseThrow(() -> new NoResultException("Estado não encontrado.")));
 		}
 		
-		return new SolicitacaoCompraEntidade(email, nome, sobreNome, documento, endereco, complemento, cidade, telefone, cep, estadoEncontrado, paisEncontrado);
+		var pedido = new PedidoCompraEntidade(email, nome, sobreNome, documento, endereco, complemento, cidade, telefone, cep, estadoEncontrado, paisEncontrado);		
+		pedido.setCompra(getCompra().toEntidade(pedido, livroRepositorio));
+		return pedido;
 	}
 
 	@Override
 	public String toString() {
-		return "SolicitacaoCompraParcial [email=" + email + ", nome=" + nome + ", sobreNome=" + sobreNome
+		return "SolicitacaoCompraRequest [email=" + email + ", nome=" + nome + ", sobreNome=" + sobreNome
 				+ ", documento=" + documento + ", endereco=" + endereco + ", complemento=" + complemento + ", cidade="
-				+ cidade + ", estado=" + estado + ", pais=" + pais + ", telefone=" + telefone + ", cep=" + cep + "]";
+				+ cidade + ", estado=" + estado + ", pais=" + pais + ", telefone=" + telefone + ", cep=" + cep
+				+ ", compra=" + compra + "]";
 	}
-	
-	
 
 }

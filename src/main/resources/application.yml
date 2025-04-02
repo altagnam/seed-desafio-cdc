@@ -6,16 +6,22 @@ server:
       force-response: true
 
 spring:
+  h2:
+    console:
+      enabled: true
   messages:
     basename:
     - messages
   application:
     name: 'primeiro-desafio'
   datasource:
-    url: jdbc:h2:mem:dcbapp
+    name: primeirodesafiodb
+    url: jdbc:h2:~/test
     driverClassName: org.h2.Driver
     username: sa
     password: password
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: true
+    hibernate:
+      ddl-auto: create-drop

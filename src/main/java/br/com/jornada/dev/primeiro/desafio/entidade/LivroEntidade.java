@@ -2,6 +2,7 @@ package br.com.jornada.dev.primeiro.desafio.entidade;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 import br.com.jornada.dev.primeiro.desafio.model.LivroDadosSimplesResponse;
 import jakarta.persistence.CascadeType;
@@ -242,6 +243,25 @@ public class LivroEntidade {
 		this.autor = autor;
 	}
 	
+	
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(isbn);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LivroEntidade other = (LivroEntidade) obj;
+		return Objects.equals(isbn, other.isbn);
+	}
+
 	/**
 	 * 
 	 * @return
