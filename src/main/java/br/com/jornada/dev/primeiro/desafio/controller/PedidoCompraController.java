@@ -9,21 +9,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.jornada.dev.primeiro.desafio.model.PedidoCompraRequest;
-import br.com.jornada.dev.primeiro.desafio.model.PedidoCompraResponse;
+import br.com.jornada.dev.primeiro.desafio.model.CompraRequest;
+import br.com.jornada.dev.primeiro.desafio.model.CompraResponse;
 import br.com.jornada.dev.primeiro.desafio.repository.EstadoRepositorio;
 import br.com.jornada.dev.primeiro.desafio.repository.LivroRepositorio;
 import br.com.jornada.dev.primeiro.desafio.repository.PaisRepositorio;
-import br.com.jornada.dev.primeiro.desafio.service.PedidoCompraService;
+import br.com.jornada.dev.primeiro.desafio.service.CompraService;
 import br.com.jornada.dev.primeiro.desafio.validador.CompraValidator;
 import br.com.jornada.dev.primeiro.desafio.validador.EstadoPertencePaisValidator;
+import br.com.jornada.dev.primeiro.desafio.validador.PedidoValidator;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/pedido-compra")
 public class PedidoCompraController {
 	
-	private final PedidoCompraService service;
+	private final CompraService service;
 	private final PaisRepositorio paisRepositorio;
 	private final EstadoRepositorio estadoRepositorio;
 	private final LivroRepositorio livroRepositorio;
@@ -34,7 +35,7 @@ public class PedidoCompraController {
 	 * @param paisRepositorio
 	 * @param estadoRepositorio
 	 */
-	public PedidoCompraController(PedidoCompraService service, PaisRepositorio paisRepositorio,
+	public PedidoCompraController(CompraService service, PaisRepositorio paisRepositorio,
 			EstadoRepositorio estadoRepositorio, LivroRepositorio livroRepositorio) {
 		super();
 		this.service = service;
@@ -46,9 +47,11 @@ public class PedidoCompraController {
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
+		var pedidoValidator = new PedidoValidator(livroRepositorio);
 		binder.addValidators(
 				new EstadoPertencePaisValidator(paisRepositorio, estadoRepositorio),
-				new CompraValidator(livroRepositorio)
+				new CompraValidator(pedidoValidator)
+				
 		);
 	}
 
@@ -62,7 +65,7 @@ public class PedidoCompraController {
 	 */
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public PedidoCompraResponse cadastrar(@Valid @RequestBody final PedidoCompraRequest solicitacao) {
+	public CompraResponse cadastrar(@Valid @RequestBody final CompraRequest solicitacao) {
 		return this.service.cadastrar(solicitacao);
 	}
 

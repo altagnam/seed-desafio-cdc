@@ -4,20 +4,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import br.com.jornada.dev.primeiro.desafio.model.ItemPedidoRequest;
+import br.com.jornada.dev.primeiro.desafio.model.PedidoRequest;
 import br.com.jornada.dev.primeiro.desafio.repository.LivroRepositorio;
 
 @Component
-public class CompraItemValidator implements Validator {
+public class PedidoValidator implements Validator {
 	
 	private final LivroRepositorio livroRepositorio;
-	public CompraItemValidator(final LivroRepositorio livroRepositorio) {
+	public PedidoValidator(final LivroRepositorio livroRepositorio) {
 		this.livroRepositorio = livroRepositorio;
 	}
 
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return clazz.isAssignableFrom(ItemPedidoRequest.class);
+		return clazz.isAssignableFrom(PedidoRequest.class);
 	}
 
 	@Override
@@ -26,13 +26,9 @@ public class CompraItemValidator implements Validator {
 			return;
 		}
 		
-		var item = (ItemPedidoRequest) target;
-		if (item.getQuantidade() < 1) {
-			errors.rejectValue("quantidade", null, "Quantidade deve ser maior que zero");
-		}
-		
-		if(!livroRepositorio.existsById(item.getLivro())) {
-			errors.rejectValue("livro", null, "Livro não cadastrado");
+		var pedido = (PedidoRequest) target;
+		if (!pedido.isValorTotalEstaCorreto(pedido.getTotal(), livroRepositorio)) {
+			errors.rejectValue("total", null, "O total informado é inválido.");
 		}
 		
 	}

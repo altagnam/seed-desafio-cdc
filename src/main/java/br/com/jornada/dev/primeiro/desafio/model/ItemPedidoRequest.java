@@ -1,7 +1,8 @@
 package br.com.jornada.dev.primeiro.desafio.model;
 
-import br.com.jornada.dev.primeiro.desafio.entidade.CompraEntidade;
-import br.com.jornada.dev.primeiro.desafio.entidade.CompraItemEntidade;
+import java.math.BigDecimal;
+
+import br.com.jornada.dev.primeiro.desafio.entidade.ItemPedidoEntidade;
 import br.com.jornada.dev.primeiro.desafio.entidade.LivroEntidade;
 import br.com.jornada.dev.primeiro.desafio.repository.LivroRepositorio;
 import br.com.jornada.dev.primeiro.desafio.validador.ExistisId;
@@ -9,7 +10,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public class CompraItemRequest {
+public class ItemPedidoRequest {
 
 	@NotNull
 	@ExistisId(domainClass = LivroEntidade.class, fieldName = "id")
@@ -19,7 +20,7 @@ public class CompraItemRequest {
 	private int quantidade;
 
 
-	public CompraItemRequest(@NotNull Long idLivro, @Positive int quantidade) {
+	public ItemPedidoRequest(@NotNull Long idLivro, @Positive int quantidade) {
 		this.livro = idLivro;
 		this.quantidade = quantidade;
 	}
@@ -39,11 +40,22 @@ public class CompraItemRequest {
 	}
 	
 	
-	public CompraItemEntidade toEntidade(final LivroRepositorio livroRepositorio, final CompraEntidade compra) {
-		return new CompraItemEntidade(
+	/**
+	 * Retorna o preco deste item
+	 * @param livroRepositorio
+	 * @return
+	 */
+	public BigDecimal getTotal(final LivroRepositorio livroRepositorio) {
+		return livroRepositorio.findById(livro).orElseThrow(NoResultException::new)
+				.getPreco()
+				.multiply(new BigDecimal(quantidade));
+	}
+
+	
+	public ItemPedidoEntidade toEntidade(final LivroRepositorio livroRepositorio) {
+		return new ItemPedidoEntidade(
 				livroRepositorio.findById(livro).orElseThrow(() -> new NoResultException("Livro não cadastrado.")),
-				quantidade,
-				compra
+				quantidade
 		);
 	}
 

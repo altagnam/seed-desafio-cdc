@@ -1,6 +1,6 @@
 package br.com.jornada.dev.primeiro.desafio.model;
 
-public class PedidoCompraResponse {
+public class CompraResponse {
 
 	private Long id;
 
@@ -10,7 +10,7 @@ public class PedidoCompraResponse {
 	 * @param id
 	 * @param status
 	 */
-	public PedidoCompraResponse(Long id, SituacaoCompra status) {
+	public CompraResponse(Long id, SituacaoCompra status) {
 		super();
 		this.id = id;
 		this.status = status;

@@ -11,14 +11,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 @Entity
-@jakarta.persistence.Table(name = "COMPRA_ITEM")
-public class CompraItemEntidade {	
+@jakarta.persistence.Table(name = "PEDIDO_ITEM")
+public class ItemPedidoEntidade {	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,24 +32,18 @@ public class CompraItemEntidade {
 	
 	@NotNull
 	@OneToOne(cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "id", referencedColumnName = "id", foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "FK_LIVRO_COMPRA_ITEM"))
+	@JoinColumn(name = "id", referencedColumnName = "id", foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "FK_LIVRO_PEDIDO_ITEM"))
 	private LivroEntidade livro;
 
-	@NotNull
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinColumn(name = "id_compra", referencedColumnName = "id")
-	private CompraEntidade compra;
-	
 	/**
 	 * 
 	 * @param livro
 	 * @param quantidade
 	 */
-	public CompraItemEntidade(@NotNull LivroEntidade livro, @Positive int quantidade, @NotNull CompraEntidade compra) {
+	public ItemPedidoEntidade(@NotNull LivroEntidade livro, @Positive int quantidade) {
 		this.livro = livro;
 		this.precoAtual = livro.getPreco();
 		this.quantidade = quantidade;
-		this.compra = compra;
 	}
 	
 	
@@ -82,15 +75,6 @@ public class CompraItemEntidade {
 	public BigDecimal getPrecoAtual() {
 		return precoAtual;
 	}
-		
-	
-	/**
-	 * @return the compra
-	 */
-	public CompraEntidade getCompra() {
-		return compra;
-	}
-
 
 	/**
 	 * Retorna o preço total
@@ -114,7 +98,7 @@ public class CompraItemEntidade {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CompraItemEntidade other = (CompraItemEntidade) obj;
+		ItemPedidoEntidade other = (ItemPedidoEntidade) obj;
 		return Objects.equals(livro, other.livro);
 	}
 

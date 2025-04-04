@@ -2,22 +2,23 @@ package br.com.jornada.dev.primeiro.desafio.validador;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import br.com.jornada.dev.primeiro.desafio.model.PedidoCompraRequest;
-import br.com.jornada.dev.primeiro.desafio.repository.LivroRepositorio;
+import br.com.jornada.dev.primeiro.desafio.model.CompraRequest;
 
 @Component
 public class CompraValidator implements Validator {
 	
-	private final LivroRepositorio livroRepositorio;
-	public CompraValidator(final LivroRepositorio livroRepositorio) {
-		this.livroRepositorio = livroRepositorio;
+	private final PedidoValidator pedidoValidator;
+	
+	public CompraValidator(final PedidoValidator pedidoValidator) {
+		this.pedidoValidator = pedidoValidator;
 	}
 
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return clazz.isAssignableFrom(PedidoCompraRequest.class);
+		return clazz.isAssignableFrom(CompraRequest.class);
 	}
 
 	@Override
@@ -26,11 +27,9 @@ public class CompraValidator implements Validator {
 			return;
 		}
 		
-		var solicitacao = (PedidoCompraRequest) target;
-		if (!solicitacao.getCompra().isValorTotalValido(livroRepositorio)) {
-			errors.setNestedPath("compra");
-			errors.rejectValue("total", null, "O total informado é inválido.");
-		}
+		var compra = (CompraRequest) target;		
+		errors.setNestedPath("pedido");
+		ValidationUtils.invokeValidator(this.pedidoValidator, compra.getPedido(), errors);
 		
 	}
 
