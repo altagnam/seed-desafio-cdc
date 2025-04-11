@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import br.com.jornada.dev.primeiro.desafio.model.AutorRequest;
+import br.com.jornada.dev.primeiro.desafio.negocio.autor.model.AutorRequest;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
