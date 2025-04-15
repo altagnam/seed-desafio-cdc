@@ -28,7 +28,7 @@ public class MessageErroHandle {
 	@ExceptionHandler(NoResultException.class)
 	@ResponseStatus(code = HttpStatus.NOT_FOUND)
 	public ErrosReponse handleNoResultException(NoResultException ex) {
-		return new ErrosReponse(Arrays.asList("Nenhum registro encontrado."));
+		return new ErrosReponse(Arrays.asList(ex.getLocalizedMessage()));
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

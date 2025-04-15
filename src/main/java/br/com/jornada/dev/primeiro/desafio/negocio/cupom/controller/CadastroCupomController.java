@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.jornada.dev.primeiro.desafio.negocio.cupom.model.NovoCupomRequest;
 import br.com.jornada.dev.primeiro.desafio.negocio.cupom.model.NovoCupomResponse;
-import br.com.jornada.dev.primeiro.desafio.negocio.cupom.repository.CumpomEntidadeRepostitory;
+import br.com.jornada.dev.primeiro.desafio.negocio.cupom.repository.CupomRepository;
 import jakarta.validation.Valid;
 
 /**
@@ -21,8 +21,8 @@ import jakarta.validation.Valid;
 @RequestMapping("/cupons")
 public class CadastroCupomController {
 	
-	private CumpomEntidadeRepostitory repository;
-	public CadastroCupomController(final CumpomEntidadeRepostitory repository) {
+	private CupomRepository repository;
+	public CadastroCupomController(final CupomRepository repository) {
 		this.repository = repository;
 	
 	}

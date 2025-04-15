@@ -3,7 +3,7 @@ package br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.model;
 import java.math.BigDecimal;
 
 import br.com.jornada.dev.primeiro.desafio.negocio.livro.LivroEntidade;
-import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepositorio;
+import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepository;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.PedidoItemEntidade;
 import br.com.jornada.dev.primeiro.desafio.validador.ExistisId;
 import jakarta.persistence.NoResultException;
@@ -45,14 +45,14 @@ public class PedidoItemRequest {
 	 * @param livroRepositorio
 	 * @return
 	 */
-	public BigDecimal getTotal(final LivroRepositorio livroRepositorio) {
+	public BigDecimal getTotal(final LivroRepository livroRepositorio) {
 		return livroRepositorio.findById(livro).orElseThrow(NoResultException::new)
 				.getPreco()
 				.multiply(new BigDecimal(quantidade));
 	}
 
 	
-	public PedidoItemEntidade toEntidade(final LivroRepositorio livroRepositorio) {
+	public PedidoItemEntidade toEntidade(final LivroRepository livroRepositorio) {
 		return new PedidoItemEntidade(
 				livroRepositorio.findById(livro).orElseThrow(() -> new NoResultException("Livro não cadastrado.")),
 				quantidade

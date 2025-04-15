@@ -4,14 +4,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepositorio;
+import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepository;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.model.PedidoRequest;
 
 @Component
-public class PedidoCompraVerificarPedidoValidator implements Validator {
+public class PedidoCompraValorTotalValidator implements Validator {
 	
-	private final LivroRepositorio livroRepositorio;
-	public PedidoCompraVerificarPedidoValidator(final LivroRepositorio livroRepositorio) {
+	private final LivroRepository livroRepositorio;
+	public PedidoCompraValorTotalValidator(final LivroRepository livroRepositorio) {
 		this.livroRepositorio = livroRepositorio;
 	}
 

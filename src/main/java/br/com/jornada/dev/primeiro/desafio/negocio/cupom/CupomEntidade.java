@@ -2,6 +2,7 @@ package br.com.jornada.dev.primeiro.desafio.negocio.cupom;
 
 import java.time.LocalDate;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.util.Assert;
 
 import jakarta.persistence.Entity;
@@ -29,6 +30,17 @@ public class CupomEntidade {
 	
 	@Future
 	private LocalDate validade;
+	
+	
+
+	/**
+	 * <p>Construtor utilizado pelo JPA, responsável por evitar o erro org.hibernate.InstantiationException: No default constructor</p>
+	 * Utilize o construtor com argumentos para garantir a integridade 
+	 */
+	@Deprecated
+	public CupomEntidade() {
+		super();
+	}
 
 	/**
 	 * @param codigo
@@ -73,6 +85,16 @@ public class CupomEntidade {
 		return validade;
 	}
 	
+	/**
+	 * Verifica se o cupom encontra-se valido
+	 * @return
+	 */
+	public boolean isValido() {
+		if (Strings.isBlank(codigo) || desconto < 0 || LocalDate.now().isAfter(validade)) {
+			return false;
+		}
+		return true;
+	}
 	
 	@Override
 	public String toString() {

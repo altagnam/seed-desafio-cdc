@@ -8,7 +8,7 @@ import br.com.jornada.dev.primeiro.desafio.negocio.pais.repository.PaisRepositor
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.model.PedidoCompraRequest;
 import jakarta.persistence.NoResultException;
 
-public class PedidoCompraVerificarEstadoPertencePaisValidator implements Validator{
+public class PedidoCompraEstadoPertencePaisValidator implements Validator{
 
 	private final PaisRepositorio paisRepositorio;
 	private final EstadoRepositorio estadoRepositorio;
@@ -18,7 +18,7 @@ public class PedidoCompraVerificarEstadoPertencePaisValidator implements Validat
 	 * @param paisRepositorio
 	 * @param estadoRepositorio
 	 */
-	public PedidoCompraVerificarEstadoPertencePaisValidator(PaisRepositorio paisRepositorio, EstadoRepositorio estadoRepositorio) {
+	public PedidoCompraEstadoPertencePaisValidator(PaisRepositorio paisRepositorio, EstadoRepositorio estadoRepositorio) {
 		super();
 		this.paisRepositorio = paisRepositorio;
 		this.estadoRepositorio = estadoRepositorio;

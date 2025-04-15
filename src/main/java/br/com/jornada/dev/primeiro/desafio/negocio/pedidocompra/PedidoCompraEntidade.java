@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import org.springframework.util.Assert;
 
+import br.com.jornada.dev.primeiro.desafio.negocio.cupom.CupomEntidade;
 import br.com.jornada.dev.primeiro.desafio.negocio.estado.EstadoEntidade;
 import br.com.jornada.dev.primeiro.desafio.negocio.pais.PaisEntidade;
 import jakarta.persistence.CascadeType;
@@ -75,9 +76,14 @@ public class PedidoCompraEntidade {
 	@JoinColumn(name = "id_pais")
 	@ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 	private PaisEntidade pais;
+	
+	@JoinColumn(name = "id_cupom", updatable = false)
+	@ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+	private CupomEntidade cupom;
 
 	@OneToOne(cascade = CascadeType.PERSIST, mappedBy = "compra", targetEntity = PedidoEntidade.class)
 	private PedidoEntidade pedido;
+	
 	
 
 	/**
@@ -110,6 +116,7 @@ public class PedidoCompraEntidade {
 		this.pais = pais;
 		this.pedido = funcaoCriacaoPedido.apply(this);
 		
+		
 		/*
 		 * Como um país pode não ter estados vinculados,
 		 * precisamos fazer esta validação para garantir a integridade
@@ -119,6 +126,17 @@ public class PedidoCompraEntidade {
 			Assert.notNull(this.pais, "O país precisa ser informado.");
 			Assert.isTrue(this.estado.isPertencePais(this.pais), "O estado informado não pertence ao páis indicado.");
 		}
+	}
+	
+	
+	/**
+	 * Aplica o cupom de desconto a compra
+	 * @param cupom
+	 */
+	public void aplicarCupom(CupomEntidade cupom) {
+		Assert.isTrue(cupom.isValido(), "O cupom é inválido.");
+		Assert.isNull(this.cupom, "Cupom já informado. Alteração não permitida.");
+		this.cupom = cupom;
 	}
 
 	/**
@@ -226,15 +244,24 @@ public class PedidoCompraEntidade {
 	public void setPedido(PedidoEntidade pedido) {
 		this.pedido = pedido;
 	}
+	
+
+	/**
+	 * @return the cupom
+	 */
+	public CupomEntidade getCupom() {
+		return cupom;
+	}
 
 	@Override
 	public String toString() {
-		return "CompraEntidade [id=" + id + ", email=" + email + ", nome=" + nome + ", sobreNome=" + sobreNome
+		return "PedidoCompraEntidade [id=" + id + ", email=" + email + ", nome=" + nome + ", sobreNome=" + sobreNome
 				+ ", documento=" + documento + ", endereco=" + endereco + ", complemento=" + complemento + ", cidade="
 				+ cidade + ", telefone=" + telefone + ", cep=" + cep + ", estado=" + estado + ", pais=" + pais
-				+ ", pedido=" + pedido + "]";
+				+ ", pedido=" + pedido + ", cupom=" + cupom + "]";
 	}
 
+	
 	
 	
 }

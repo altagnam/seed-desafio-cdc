@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.util.Assert;
 
-import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepositorio;
+import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepository;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.PedidoCompraEntidade;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.PedidoEntidade;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.PedidoItemEntidade;
@@ -56,7 +56,7 @@ public class PedidoRequest {
 	 * @param valor
 	 * @return
 	 */
-	public boolean isValorTotalEstaCorreto(final @NotNull BigDecimal valor, final @NotNull LivroRepositorio livroRepositorio) {
+	public boolean isValorTotalEstaCorreto(final @NotNull BigDecimal valor, final @NotNull LivroRepository livroRepositorio) {
 		var totalPedido = getItens().stream()
 				.map(item -> item.getTotal(livroRepositorio))
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -69,7 +69,7 @@ public class PedidoRequest {
 	 * @param livroRepositorio
 	 * @return
 	 */
-	public Function<PedidoCompraEntidade, PedidoEntidade> toEntidade(final @NotNull LivroRepositorio livroRepositorio) {
+	public Function<PedidoCompraEntidade, PedidoEntidade> toEntidade(final @NotNull LivroRepository livroRepositorio) {
 		Assert.notNull(livroRepositorio, "O repositorio de livros não deve ser nulo.");		
 		Set<PedidoItemEntidade> itensComprados = this.itens.stream().map(item -> item.toEntidade(livroRepositorio)).collect(Collectors.toSet());
 		

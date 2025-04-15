@@ -10,9 +10,9 @@ import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.model.PedidoComp
 @Component
 public class PedidoCompraNovoItemValidator implements Validator {
 	
-	private final PedidoCompraVerificarPedidoValidator pedidoValidator;
+	private final PedidoCompraValorTotalValidator pedidoValidator;
 	
-	public PedidoCompraNovoItemValidator(final PedidoCompraVerificarPedidoValidator pedidoValidator) {
+	public PedidoCompraNovoItemValidator(final PedidoCompraValorTotalValidator pedidoValidator) {
 		this.pedidoValidator = pedidoValidator;
 	}
 

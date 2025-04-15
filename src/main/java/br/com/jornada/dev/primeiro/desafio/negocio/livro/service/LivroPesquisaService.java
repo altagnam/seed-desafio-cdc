@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import br.com.jornada.dev.primeiro.desafio.negocio.livro.model.NovoLivroResponse;
-import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepositorio;
+import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepository;
 import br.com.jornada.dev.primeiro.desafio.negocio.livro.model.LivroDetalheResponse;
 import jakarta.persistence.NoResultException;
 import jakarta.validation.constraints.Min;
@@ -18,13 +18,13 @@ import jakarta.validation.constraints.NotNull;
 public class LivroPesquisaService {
 	
 	// 1 ponto para LivroRepositorio
-	private final LivroRepositorio repositorio;
+	private final LivroRepository repositorio;
 
 	
 	/**
 	 * @param repositorio
 	 */
-	public LivroPesquisaService(LivroRepositorio repositorio) {
+	public LivroPesquisaService(LivroRepository repositorio) {
 		super();
 		this.repositorio = repositorio;
 	}

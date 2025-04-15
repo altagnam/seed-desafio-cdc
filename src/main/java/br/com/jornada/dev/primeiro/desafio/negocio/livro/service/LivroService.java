@@ -3,7 +3,7 @@ package br.com.jornada.dev.primeiro.desafio.negocio.livro.service;
 import org.springframework.stereotype.Service;
 
 import br.com.jornada.dev.primeiro.desafio.negocio.livro.model.NovoLivroResponse;
-import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepositorio;
+import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepository;
 import br.com.jornada.dev.primeiro.desafio.negocio.autor.repository.AutorRepositorio;
 import br.com.jornada.dev.primeiro.desafio.negocio.categoria.repository.CategoriaRepositorio;
 import br.com.jornada.dev.primeiro.desafio.negocio.livro.model.NovoLivroRequest;
@@ -13,7 +13,7 @@ import jakarta.validation.constraints.Null;
 @Service
 public class LivroService {
 	
-	private final LivroRepositorio repositorio;
+	private final LivroRepository repositorio;
 	private final CategoriaRepositorio categoriaRepositorio;
 	private final AutorRepositorio autorRepositorio;
 
@@ -23,7 +23,7 @@ public class LivroService {
 	 * @param categoriaRepositorio
 	 * @param autorRepositorio
 	 */
-	public LivroService(LivroRepositorio repositorio, CategoriaRepositorio categoriaRepositorio,
+	public LivroService(LivroRepository repositorio, CategoriaRepositorio categoriaRepositorio,
 			AutorRepositorio autorRepositorio) {
 		super();
 		this.repositorio = repositorio;

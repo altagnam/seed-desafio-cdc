@@ -1,16 +1,18 @@
 package br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.model;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.hibernate.validator.constraints.br.CNPJ;
-import org.hibernate.validator.constraints.br.CPF;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.util.Assert;
 
+import br.com.jornada.dev.primeiro.desafio.negocio.cupom.CupomEntidade;
+import br.com.jornada.dev.primeiro.desafio.negocio.cupom.repository.CupomRepository;
 import br.com.jornada.dev.primeiro.desafio.negocio.estado.EstadoEntidade;
 import br.com.jornada.dev.primeiro.desafio.negocio.estado.repository.EstadoRepositorio;
-import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepositorio;
+import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepository;
 import br.com.jornada.dev.primeiro.desafio.negocio.pais.PaisEntidade;
 import br.com.jornada.dev.primeiro.desafio.negocio.pais.repository.PaisRepositorio;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.PedidoCompraEntidade;
@@ -55,6 +57,8 @@ public class PedidoCompraRequest {
 	@ExistisId(domainClass = PaisEntidade.class, fieldName = "id")
 	private Long pais;
 	
+	private String cupom;
+	
 	@NotBlank
 	private String telefone;
 	
@@ -64,6 +68,7 @@ public class PedidoCompraRequest {
 	@Valid
 	@NotNull
 	private PedidoRequest pedido;
+	
 
 	/**
 	 * @param email
@@ -77,10 +82,13 @@ public class PedidoCompraRequest {
 	 * @param pais
 	 * @param telefone
 	 * @param cep
+	 * @param pedido
+	 * @param cupom
 	 */
 	public PedidoCompraRequest(@Email @NotBlank String email, @NotBlank String nome, @NotBlank String sobreNome,
-			@NotBlank @CPF @CNPJ String documento, @NotBlank String endereco, @NotBlank String complemento,
-			@NotBlank String cidade, Long estado, @NotNull Long pais, @NotBlank String telefone, @NotBlank String cep, @NotNull PedidoRequest pedido) {
+			@NotBlank String documento, @NotBlank String endereco, @NotBlank String complemento,
+			@NotBlank String cidade, Long estado, @NotNull Long pais, @NotBlank String telefone, @NotBlank String cep,
+			@Valid @NotNull PedidoRequest pedido, String cupom) {
 		super();
 		this.email = email;
 		this.nome = nome;
@@ -94,6 +102,7 @@ public class PedidoCompraRequest {
 		this.telefone = telefone;
 		this.cep = cep;
 		this.pedido = pedido;
+		this.cupom = cupom;
 	}
 
 	/**
@@ -180,6 +189,29 @@ public class PedidoCompraRequest {
 	public PedidoRequest getPedido() {
 		return pedido;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public BigDecimal getTotalPedido() {
+		return pedido.getTotal();
+	}
+
+	/**
+	 * @return the cupom
+	 */
+	public String getCupom() {
+		return cupom;
+	}
+	
+	/**
+	 * Indica se há cupom informado para este pedido
+	 * @return
+	 */
+	public boolean isCupomInformado() {
+		return !Strings.isBlank(cupom);
+	}
 
 	/**
 	 * Indica se o usuário informou um estado na body da requisição.
@@ -189,13 +221,16 @@ public class PedidoCompraRequest {
 		return Objects.nonNull(this.estado);
 	}
 	
+	
 	/**
-	 * Retorna uma instancia valida de {@link PedidoCompraEntidade}
+	 * 
+	 * @param cupomRepostitory
 	 * @param paisRepositorio
 	 * @param estadoRepositorio
+	 * @param livroRepositorio
 	 * @return
 	 */
-	public PedidoCompraEntidade toEntidade(final PaisRepositorio paisRepositorio, final EstadoRepositorio estadoRepositorio, final LivroRepositorio livroRepositorio) {
+	public PedidoCompraEntidade toEntidade(final CupomRepository cupomRepostitory, final PaisRepositorio paisRepositorio, final EstadoRepositorio estadoRepositorio, final LivroRepository livroRepositorio) {
 		Optional<EstadoEntidade> estadoEncontrado = Optional.empty();
 		PaisEntidade paisEncontrado = paisRepositorio.findById(pais).orElseThrow(() -> new NoResultException("País não encontrado."));
 		
@@ -205,7 +240,17 @@ public class PedidoCompraRequest {
 		}
 		
 		Function<PedidoCompraEntidade, PedidoEntidade> funcaoCriacaoPedido = getPedido().toEntidade(livroRepositorio);
-		return new PedidoCompraEntidade(email, nome, sobreNome, documento, endereco, complemento, cidade, telefone, cep, estadoEncontrado, paisEncontrado, funcaoCriacaoPedido);		
+		var pedidoCompra = new PedidoCompraEntidade(email, nome, sobreNome, documento, endereco, complemento, cidade, telefone, cep, estadoEncontrado, paisEncontrado, funcaoCriacaoPedido);
+		
+		
+		if (Strings.isNotBlank(cupom)) {
+			CupomEntidade cupomEncontrado = cupomRepostitory.findByCodigo(cupom).orElseThrow(() -> new NoResultException("Cupom não encontrado."));
+			Assert.isTrue(cupomEncontrado.isValido(), "Cupom inválido");
+			pedidoCompra.aplicarCupom(cupomEncontrado);
+			
+		}
+		
+		return pedidoCompra;
 
 	}
 

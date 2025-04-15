@@ -9,15 +9,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.jornada.dev.primeiro.desafio.negocio.cupom.repository.CupomRepository;
 import br.com.jornada.dev.primeiro.desafio.negocio.estado.repository.EstadoRepositorio;
-import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepositorio;
+import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepository;
 import br.com.jornada.dev.primeiro.desafio.negocio.pais.repository.PaisRepositorio;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.model.PedidoCompraRequest;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.model.PedidoCompraResponse;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.service.PedidoCompraService;
-import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.validator.PedidoCompraVerificarEstadoPertencePaisValidator;
+import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.validator.PedidoCompraCupomValidator;
+import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.validator.PedidoCompraEstadoPertencePaisValidator;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.validator.PedidoCompraNovoItemValidator;
-import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.validator.PedidoCompraVerificarPedidoValidator;
+import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.validator.PedidoCompraValorTotalValidator;
 import jakarta.validation.Valid;
 
 @RestController
@@ -27,7 +29,8 @@ public class PedidoCompraController {
 	private final PedidoCompraService service;
 	private final PaisRepositorio paisRepositorio;
 	private final EstadoRepositorio estadoRepositorio;
-	private final LivroRepositorio livroRepositorio;
+	private final LivroRepository livroRepositorio;
+	private final CupomRepository cupomRepository;
 	
 	
 	/**
@@ -36,20 +39,22 @@ public class PedidoCompraController {
 	 * @param estadoRepositorio
 	 */
 	public PedidoCompraController(PedidoCompraService service, PaisRepositorio paisRepositorio,
-			EstadoRepositorio estadoRepositorio, LivroRepositorio livroRepositorio) {
+			EstadoRepositorio estadoRepositorio, LivroRepository livroRepositorio, CupomRepository cupomRepository) {
 		super();
 		this.service = service;
 		this.paisRepositorio = paisRepositorio;
 		this.estadoRepositorio = estadoRepositorio;
 		this.livroRepositorio = livroRepositorio;
+		this.cupomRepository = cupomRepository;
 	}
 
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		var pedidoValidator = new PedidoCompraVerificarPedidoValidator(livroRepositorio);
+		var pedidoValidator = new PedidoCompraValorTotalValidator(livroRepositorio);
 		binder.addValidators(
-				new PedidoCompraVerificarEstadoPertencePaisValidator(paisRepositorio, estadoRepositorio),
+				new PedidoCompraCupomValidator(cupomRepository),
+				new PedidoCompraEstadoPertencePaisValidator(paisRepositorio, estadoRepositorio),
 				new PedidoCompraNovoItemValidator(pedidoValidator)
 				
 		);

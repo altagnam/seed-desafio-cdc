@@ -2,8 +2,9 @@ package br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.service;
 
 import org.springframework.stereotype.Service;
 
+import br.com.jornada.dev.primeiro.desafio.negocio.cupom.repository.CupomRepository;
 import br.com.jornada.dev.primeiro.desafio.negocio.estado.repository.EstadoRepositorio;
-import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepositorio;
+import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepository;
 import br.com.jornada.dev.primeiro.desafio.negocio.pais.repository.PaisRepositorio;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.model.PedidoCompraRequest;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.model.PedidoCompraResponse;
@@ -17,8 +18,9 @@ public class PedidoCompraService {
 	
 	private final EstadoRepositorio estadoRepositorio;
 	private final PaisRepositorio paisRepositorio;
-	private final LivroRepositorio livroRepositorio;	
+	private final LivroRepository livroRepositorio;	
 	private final CompraRepositorio compraRepositorio;
+	private final CupomRepository cupomRepostitory;
 	
 
 	/**
@@ -27,12 +29,13 @@ public class PedidoCompraService {
 	 * @param livroRepositorio
 	 */
 	public PedidoCompraService(EstadoRepositorio estadoRepositorio, PaisRepositorio paisRepositorio,
-			LivroRepositorio livroRepositorio, CompraRepositorio compraRepositorio) {
+			LivroRepository livroRepositorio, CompraRepositorio compraRepositorio, CupomRepository cupomRepostitory) {
 		super();
 		this.estadoRepositorio = estadoRepositorio;
 		this.paisRepositorio = paisRepositorio;
 		this.livroRepositorio = livroRepositorio;
 		this.compraRepositorio = compraRepositorio;
+		this.cupomRepostitory = cupomRepostitory;
 	}
 
 
@@ -44,9 +47,11 @@ public class PedidoCompraService {
 	@Transactional
 	public PedidoCompraResponse cadastrar(@NotNull final PedidoCompraRequest solicitacao) {
 		var pedido = this.compraRepositorio.save(solicitacao.toEntidade(
+				cupomRepostitory,
 				paisRepositorio, 
 				estadoRepositorio, 
-				livroRepositorio)
+				livroRepositorio
+			)
 		);
 		
 		return new PedidoCompraResponse(pedido.getId(), SituacaoCompra.INICIADA);

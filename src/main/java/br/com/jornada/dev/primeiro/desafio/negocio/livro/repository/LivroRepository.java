@@ -11,8 +11,9 @@ import br.com.jornada.dev.primeiro.desafio.negocio.livro.LivroEntidade;
  *
  */
 @Repository
-public interface LivroRepositorio extends JpaRepository<LivroEntidade, Long>{
-
+public interface LivroRepository extends JpaRepository<LivroEntidade, Long>{
+	
+	
 
 	
 }
