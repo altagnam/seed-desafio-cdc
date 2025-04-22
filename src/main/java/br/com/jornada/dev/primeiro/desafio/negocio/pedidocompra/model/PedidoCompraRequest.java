@@ -2,24 +2,17 @@ package br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.model;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
 
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.util.Assert;
 
-import br.com.jornada.dev.primeiro.desafio.negocio.cupom.CupomEntidade;
-import br.com.jornada.dev.primeiro.desafio.negocio.cupom.repository.CupomRepository;
 import br.com.jornada.dev.primeiro.desafio.negocio.estado.EstadoEntidade;
-import br.com.jornada.dev.primeiro.desafio.negocio.estado.repository.EstadoRepositorio;
-import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepository;
 import br.com.jornada.dev.primeiro.desafio.negocio.pais.PaisEntidade;
-import br.com.jornada.dev.primeiro.desafio.negocio.pais.repository.PaisRepositorio;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.PedidoCompraEntidade;
-import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.PedidoEntidade;
+import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.service.ConstrutorPaisComEstado;
+import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.service.ConstrutorPaisComEstado.PaisComPossivelEstado;
+import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.service.GeradorPedido;
 import br.com.jornada.dev.primeiro.desafio.validador.CpfCnpj;
 import br.com.jornada.dev.primeiro.desafio.validador.ExistisId;
-import jakarta.persistence.NoResultException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -224,32 +217,18 @@ public class PedidoCompraRequest {
 	
 	/**
 	 * 
-	 * @param cupomRepostitory
-	 * @param paisRepositorio
-	 * @param estadoRepositorio
-	 * @param livroRepositorio
+	 * @param geradorPedido
+	 * @param construtorPaisComEstado
 	 * @return
 	 */
-	public PedidoCompraEntidade toEntidade(final CupomRepository cupomRepostitory, final PaisRepositorio paisRepositorio, final EstadoRepositorio estadoRepositorio, final LivroRepository livroRepositorio) {
-		Optional<EstadoEntidade> estadoEncontrado = Optional.empty();
-		PaisEntidade paisEncontrado = paisRepositorio.findById(pais).orElseThrow(() -> new NoResultException("País não encontrado."));
+	// 1 UCP GeradorPedido
+	// 1 UCP ConstrutorPaisComEstado
+	public PedidoCompraEntidade toEntidade(final GeradorPedido geradorPedido, final ConstrutorPaisComEstado construtorPaisComEstado) {
+		//1 UCP PaisComPossivelEstado
+		PaisComPossivelEstado paisEstado = construtorPaisComEstado.construir(pais, estado);
 		
-		if (estadoRepositorio.countByPais(pais) > 0) {
-			Assert.notNull(estado, "Estado precisa ser informado.");
-			estadoEncontrado = Optional.of(estadoRepositorio.findById(estado).orElseThrow(() -> new NoResultException("Estado não encontrado.")));
-		}
-		
-		Function<PedidoCompraEntidade, PedidoEntidade> funcaoCriacaoPedido = getPedido().toEntidade(livroRepositorio);
-		var pedidoCompra = new PedidoCompraEntidade(email, nome, sobreNome, documento, endereco, complemento, cidade, telefone, cep, estadoEncontrado, paisEncontrado, funcaoCriacaoPedido);
-		
-		
-		if (Strings.isNotBlank(cupom)) {
-			CupomEntidade cupomEncontrado = cupomRepostitory.findByCodigo(cupom).orElseThrow(() -> new NoResultException("Cupom não encontrado."));
-			Assert.isTrue(cupomEncontrado.isValido(), "Cupom inválido");
-			pedidoCompra.aplicarCupom(cupomEncontrado);
-			
-		}
-		
+		//1 UCP PedidoCompraEntidade
+		PedidoCompraEntidade pedidoCompra = geradorPedido.gerar(this, paisEstado);
 		return pedidoCompra;
 
 	}

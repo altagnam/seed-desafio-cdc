@@ -2,10 +2,6 @@ package br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.service;
 
 import org.springframework.stereotype.Service;
 
-import br.com.jornada.dev.primeiro.desafio.negocio.cupom.repository.CupomRepository;
-import br.com.jornada.dev.primeiro.desafio.negocio.estado.repository.EstadoRepositorio;
-import br.com.jornada.dev.primeiro.desafio.negocio.livro.repository.LivroRepository;
-import br.com.jornada.dev.primeiro.desafio.negocio.pais.repository.PaisRepositorio;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.model.PedidoCompraRequest;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.model.PedidoCompraResponse;
 import br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra.model.PedidoCompraResponse.SituacaoCompra;
@@ -16,11 +12,14 @@ import jakarta.validation.constraints.NotNull;
 @Service
 public class PedidoCompraService {
 	
-	private final EstadoRepositorio estadoRepositorio;
-	private final PaisRepositorio paisRepositorio;
-	private final LivroRepository livroRepositorio;	
+	// 1 UCP CompraRepositorio
 	private final CompraRepositorio compraRepositorio;
-	private final CupomRepository cupomRepostitory;
+	
+	// 1 UCP ConstrutorPaisComEstado
+	private final ConstrutorPaisComEstado construtorPaisComEstado;
+	
+	// 1 UCP GeradorPedido
+	private final GeradorPedido geradorPedido;
 	
 
 	/**
@@ -28,14 +27,12 @@ public class PedidoCompraService {
 	 * @param paisRepositorio
 	 * @param livroRepositorio
 	 */
-	public PedidoCompraService(EstadoRepositorio estadoRepositorio, PaisRepositorio paisRepositorio,
-			LivroRepository livroRepositorio, CompraRepositorio compraRepositorio, CupomRepository cupomRepostitory) {
+	public PedidoCompraService(GeradorPedido geradorPedido, ConstrutorPaisComEstado construtorPaisComEstado, 
+			CompraRepositorio compraRepositorio) {
 		super();
-		this.estadoRepositorio = estadoRepositorio;
-		this.paisRepositorio = paisRepositorio;
-		this.livroRepositorio = livroRepositorio;
+		this.geradorPedido = geradorPedido;
+		this.construtorPaisComEstado = construtorPaisComEstado;
 		this.compraRepositorio = compraRepositorio;
-		this.cupomRepostitory = cupomRepostitory;
 	}
 
 
@@ -44,13 +41,15 @@ public class PedidoCompraService {
 	 * @param solicitacao
 	 * @return
 	 */
+	// 1 UCP PedidoCompraResponse
+	// 1 UCP PedidoCompraRequest
+	// 1 UCP PedidoCompraEntidade
 	@Transactional
 	public PedidoCompraResponse cadastrar(@NotNull final PedidoCompraRequest solicitacao) {
-		var pedido = this.compraRepositorio.save(solicitacao.toEntidade(
-				cupomRepostitory,
-				paisRepositorio, 
-				estadoRepositorio, 
-				livroRepositorio
+		var pedido = this.compraRepositorio.save(
+			solicitacao.toEntidade(
+				geradorPedido,
+				construtorPaisComEstado
 			)
 		);
 		
