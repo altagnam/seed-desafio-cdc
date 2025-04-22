@@ -1,5 +1,9 @@
 package br.com.jornada.dev.primeiro.desafio.negocio.pedidocompra;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -85,6 +89,17 @@ public class PedidoCompraEntidade {
 	private PedidoEntidade pedido;
 	
 	
+	
+
+	/**
+	 * <p>Construtor utilizado pelo JPA</p>
+	 * Evita o erro <code>org.hibernate.InstantiationException: No default constructor for entity 'PedidoCompraEntidade'</code>
+	 */
+	@Deprecated
+	public PedidoCompraEntidade() {
+		super();
+	}
+
 
 	/**
 	 * @param email
@@ -251,6 +266,40 @@ public class PedidoCompraEntidade {
 	 */
 	public CupomEntidade getCupom() {
 		return cupom;
+	}
+	
+	
+	/**
+	 * Indica se para esta compra, há cupom
+	 * @return
+	 */
+	public boolean temCupom() {
+		return Objects.nonNull(getCupom());
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public BigDecimal getTotalOriginal() {
+		return getPedido().getTotal();
+	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public BigDecimal getTotalCupomAplicado() {
+		if(!temCupom()) {
+			return null;
+		}
+		
+		var valorOriginal = getTotalOriginal();
+		return valorOriginal.subtract(
+				valorOriginal.multiply(new BigDecimal(getCupom().getDesconto())), 
+				new MathContext(5, RoundingMode.HALF_UP)
+		);	
 	}
 
 	@Override

@@ -37,6 +37,15 @@ public class PedidoEntidade {
 	@OneToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "id_compra", referencedColumnName = "id")
 	private PedidoCompraEntidade compra;
+	
+	/**
+	 * <p>Construtor utilizado pelo JPA.</p>
+	 * Evita o erro <code>org.hibernate.InstantiationException: No default constructor for entity 'PedidoEntidade'</code>
+	 */
+	@Deprecated
+	public PedidoEntidade() {
+	
+	}
 
 	/**
 	 * @param total
@@ -46,7 +55,7 @@ public class PedidoEntidade {
 		super();
 		this.compra = compra;
 		this.itens = itens;
-		Assert.isTrue(isValorTotalEstaCorreto(total), "O valor informado esta diferente do calculado.");
+		Assert.isTrue(isValorTotalEstaCorreto(total), "O valor informado é diferente do calculado.");
 		this.total = total;
 	}
 
